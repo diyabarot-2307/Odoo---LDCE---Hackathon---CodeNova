@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobeTrotter - Itinerary Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+  }
+
+  body {
+    background: #f0f2f6;
+    color: #1a1a1a;
+  }
+
+  .navbar {
+    background: white;
+    padding: 18px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+  }
+
+  .back-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #1a1a1a;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .back-btn:hover {
+    background: #000;
+  }
+
+  .hero-banner {
+    position: relative;
+    background: linear-gradient(135deg, rgba(26,26,46,0.92) 0%, rgba(22,33,62,0.92) 100%),
+                url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=60') center/cover;
+    padding: 55px 60px;
+    color: white;
+    overflow: hidden;
+  }
+
+  .hero-banner h1 {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+
+  .hero-banner p {
+    color: #d5d8e3;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .container {
+    max-width: 850px;
+    margin: -25px auto 0 auto;
+    padding: 0 40px 60px 40px;
+  }
+
+  .trip-info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 26px 30px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    margin-bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .trip-info-card h2 {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .trip-info-card p {
+    color: #888;
+    font-size: 13px;
+  }
+
+  .add-stop-btn {
+    padding: 12px 22px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .add-stop-btn:hover {
+    background: #000;
+    transform: translateY(-1px);
+  }
+
+  #stopsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .stop-card {
+    background: white;
+    border-radius: 18px;
+    padding: 24px 28px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+    border-left: 4px solid #667eea;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .stop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .stop-number {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .stop-badge {
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .remove-btn {
+    background: none;
+    border: none;
+    color: #d64545;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .remove-btn:hover {
+    text-decoration: underline;
+  }
+
+  .field-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .field-group {
+    flex: 1;
+  }
+
+  .field-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #666;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .field-group input,
+  .field-group textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid #ececec;
+    border-radius: 9px;
+    font-size: 13px;
+    background: #fafbfc;
+    font-family: inherit;
+  }
+
+  .field-group input:focus,
+  .field-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+  }
+
+  .field-group textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+
+  .save-bar {
+    margin-top: 26px;
+    display: flex;
+    gap: 14px;
+  }
+
+  .save-btn {
+    flex: 1;
+    padding: 15px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .save-btn:hover {
+    background: #000;
+    transform: translateY(-1px);
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: #aaa;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="logo">🌍 GlobeTrotter</div>
+    <a href="my-trips.html" class="back-btn">← Back to My Trips</a>
+  </div>
+
+  <div class="hero-banner">
+    <h1>Itinerary Builder</h1>
+    <p>Add cities, dates, and activities to build your trip plan</p>
+  </div>
+
+  <div class="container">
+
+    <div class="trip-info-card">
+      <div>
+        <h2>Goa Adventure</h2>
+        <p>12 Aug - 16 Aug 2026</p>
+      </div>
+      <button class="add-stop-btn" onclick="addStop()">+ Add Stop</button>
+    </div>
+
+    <div id="stopsContainer"></div>
+
+    <div class="save-bar">
+      <button class="save-btn">💾 Save Itinerary</button>
+    </div>
+
+  </div>
+
+  <footer>GlobeTrotter © 2026</footer>
+
+  <script>
+    let stopCount = 0;
+
+    function addStop() {
+      stopCount++;
+      const container = document.getElementById('stopsContainer');
+
+      const card = document.createElement('div');
+      card.className = 'stop-card';
+      card.innerHTML = `
+        <div class="stop-header">
+          <div class="stop-number">
+            <span class="stop-badge">${stopCount}</span>
+            Stop ${stopCount}
+          </div>
+          <button class="remove-btn" onclick="this.closest('.stop-card').remove()">Remove</button>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>City</label>
+            <input type="text" placeholder="e.g. Goa">
+          </div>
+          <div class="field-group">
+            <label>Start Date</label>
+            <input type="date">
+          </div>
+          <div class="field-group">
+            <label>End Date</label>
+            <input type="date">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Activities</label>
+          <textarea placeholder="e.g. Beach visit, Water sports, Local food tour"></textarea>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+
+    addStop();
+  </script>
+
+</body>
+</html>
