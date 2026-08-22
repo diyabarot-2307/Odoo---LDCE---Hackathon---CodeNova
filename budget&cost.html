@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget</title>
+<style>
+body{font-family:'Segoe UI',Arial;background:#eef2ff;margin:0;display:flex;justify-content:center}
+.card{background:#fff;width:360px;margin:30px 15px;border-radius:20px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,.08)}
+h2{text-align:center;color:#1e293b;margin:0 0 18px}
+.total{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:16px;padding:18px;text-align:center}
+.total h1{margin:8px 0;font-size:32px}
+.total p{margin:0;opacity:.9;font-size:14px}
+label{font-size:13px;color:#64748b;font-weight:600;margin-top:14px;display:block}
+input{width:100%;padding:12px;border:1.5px solid #e2e8f0;border-radius:10px;box-sizing:border-box;outline:none;margin-top:6px}
+input:focus{border-color:#4f46e5}
+.row{display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:12px 14px;border-radius:12px;margin:10px 0}
+.row span{font-size:14px;color:#334155}
+.row input{width:90px;margin:0;text-align:right;background:#fff}
+.bar{height:6px;background:rgba(255,255,255,.3);border-radius:10px;margin-top:12px}
+.fill{height:100%;background:#fff;width:0%;border-radius:10px;transition:.4s}
+button{width:100%;padding:13px;border:0;border-radius:12px;background:#1e293b;color:#fff;font-weight:600;margin-top:16px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Trip Budget</h2>
+
+<div class="total">
+<p>Total Budget</p>
+<h1 id="spent">₹31,000</h1>
+<p id="remain">Remaining ₹19,000</p>
+<div class="bar"><div id="fill" class="fill" style="width:62%"></div></div>
+</div>
+
+<label>Total Budget (₹)</label>
+<input id="budget" type="number" value="50000" oninput="calc()">
+
+<div class="row"><span>🏨 Hotel</span><input id="hotel" type="number" value="15000" oninput="calc()"></div>
+<div class="row"><span>✈️ Travel</span><input id="travel" type="number" value="8000" oninput="calc()"></div>
+<div class="row"><span>🍔 Food</span><input id="food" type="number" value="5000" oninput="calc()"></div>
+<div class="row"><span>🎟️ Activities</span><input id="act" type="number" value="3000" oninput="calc()"></div>
+
+<button onclick="alert('Budget Saved!')">Save Budget</button>
+</div>
+
+<script>
+function calc(){
+ let b=+budget.value||1;
+ let s=(+hotel.value||0)+(+travel.value||0)+(+food.value||0)+(+act.value||0);
+ document.getElementById("spent").textContent="₹"+s;
+ document.getElementById("remain").textContent="Remaining ₹"+(b-s);
+ document.getElementById("fill").style.width=Math.min(s/b*100,100)+"%";
+}
+calc();
+</script>
+</body>
+</html>
