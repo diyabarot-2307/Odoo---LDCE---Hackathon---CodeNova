@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activity Search</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f7fa;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .activities {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .activity {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+
+        .activity h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🔍 Search Activities</h1>
+
+    <div class="search-box">
+        <input type="text" id="search" placeholder="Search activity...">
+
+        <select id="category">
+            <option value="all">All Categories</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Nature">Nature</option>
+            <option value="Culture">Culture</option>
+            <option value="Entertainment">Entertainment</option>
+        </select>
+
+        <button onclick="searchActivities()">Search</button>
+    </div>
+
+    <div class="activities" id="activityList"></div>
+
+    <script>
+
+        const activities = [
+            {
+                name: "River Rafting",
+                location: "Rishikesh",
+                category: "Adventure",
+                price: 1200
+            },
+            {
+                name: "Mountain Trekking",
+                location: "Manali",
+                category: "Adventure",
+                price: 800
+            },
+            {
+                name: "Nature Walk",
+                location: "Shimla",
+                category: "Nature",
+                price: 500
+            },
+            {
+                name: "Museum Visit",
+                location: "Delhi",
+                category: "Culture",
+                price: 300
+            },
+            {
+                name: "Amusement Park",
+                location: "Mumbai",
+                category: "Entertainment",
+                price: 1000
+            }
+        ];
+
+        function displayActivities(data) {
+
+            const list = document.getElementById("activityList");
+
+            list.innerHTML = "";
+
+            if (data.length === 0) {
+                list.innerHTML = "<h3>No activities found</h3>";
+                return;
+            }
+
+            data.forEach(activity => {
+
+                list.innerHTML += `
+                    <div class="activity">
+                        <h3>${activity.name}</h3>
+                        <p>📍 ${activity.location}</p>
+                        <p>🏷️ ${activity.category}</p>
+                        <p>💰 ₹${activity.price}</p>
+                        <button onclick="addActivity('${activity.name}')">
+                            Add Activity
+                        </button>
+                    </div>
+                `;
+
+            });
+        }
+
+        function searchActivities() {
+
+            const searchText =
+                document.getElementById("search").value.toLowerCase();
+
+            const category =
+                document.getElementById("category").value;
+
+            const filtered = activities.filter(activity => {
+
+                const matchesSearch =
+                    activity.name.toLowerCase().includes(searchText) ||
+                    activity.location.toLowerCase().includes(searchText);
+
+                const matchesCategory =
+                    category === "all" ||
+                    activity.category === category;
+
+                return matchesSearch && matchesCategory;
+            });
+
+            displayActivities(filtered);
+        }
+
+        function addActivity(name) {
+            alert(name + " added to your trip!");
+        }
+
+        displayActivities(activities);
+
+    </script>
+
+</body>
+</html>y>
+            </html>
