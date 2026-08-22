@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GlobeTrotter - My Trips</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            color: #222;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .profile-btn {
+            background: #222;
+            color: white;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 25px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+        }
+
+        .page-header p {
+            margin-top: 8px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .create-btn {
+            background: #222;
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .create-btn:hover {
+            background: #444;
+        }
+
+        /* Trip Cards */
+        .trip-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .trip-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            transition: 0.2s;
+        }
+
+        .trip-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .trip-card h2 {
+            font-size: 22px;
+            margin-bottom: 18px;
+        }
+
+        .trip-info {
+            color: #555;
+            margin: 10px 0;
+            font-size: 15px;
+        }
+
+        .trip-info span {
+            margin-right: 7px;
+        }
+
+        /* Status */
+        .status {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            background: #e8f5e9;
+            color: #26733a;
+        }
+
+        /* Buttons */
+        .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 22px;
+        }
+
+        .actions button {
+            padding: 9px 13px;
+            border-radius: 7px;
+            cursor: pointer;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .actions button:hover {
+            background: #f1f1f1;
+        }
+
+        .delete-btn {
+            color: #c62828;
+        }
+
+        /* Empty message */
+        .empty-message {
+            display: none;
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 15px;
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            margin-top: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .trip-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 18px;
+            }
+
+            .trip-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">🌍 GlobeTrotter</div>
+
+        <button class="profile-btn" onclick="openProfile()">
+            Profile
+        </button>
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <div class="page-header">
+            <div>
+                <h1>My Trips ✈️</h1>
+                <p>View and manage all your created trips.</p>
+            </div>
+
+            <!-- This can later connect to your teammate's create-trip.html -->
+            <button class="create-btn" onclick="createNewTrip()">
+                + Create New Trip
+            </button>
+        </div>
+
+
+        <!-- Trip Cards -->
+        <div class="trip-grid" id="tripGrid">
+
+            <!-- Trip 1 -->
+            <div class="trip-card" id="trip1">
+
+                <h2>Goa Adventure</h2>
+
+                <div class="trip-info">
+                    📅 <span>12 Aug - 16 Aug</span>
+                </div>
+
+                <div class="trip-info">
+                    📍 <span>2 Destinations</span>
+                </div>
+
+                <div class="status">
+                    Upcoming
+                </div>
+
+                <div class="actions">
+                    <button onclick="viewTrip('Goa Adventure')">
+                        View
+                    </button>
+
+                    <button onclick="editTrip('Goa Adventure')">
+                        Edit
+                    </button>
+
+                    <button class="delete-btn"
+                            onclick="deleteTrip('trip1', 'Goa Adventure')">
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+
+
+            <!-- Trip 2 -->
+            <div class="trip-card" id="trip2">
+
+                <h2>Rajasthan Explorer</h2>
+
+                <div class="trip-info">
+                    📅 <span>20 Sep - 25 Sep</span>
+                </div>
+
+                <div class="trip-info">
+                    📍 <span>3 Destinations</span>
+                </div>
+
+                <div class="status">
+                    Upcoming
+                </div>
+
+                <div class="actions">
+                    <button onclick="viewTrip('Rajasthan Explorer')">
+                        View
+                    </button>
+
+                    <button onclick="editTrip('Rajasthan Explorer')">
+                        Edit
+                    </button>
+
+                    <button class="delete-btn"
+                            onclick="deleteTrip('trip2', 'Rajasthan Explorer')">
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+
+
+            <!-- Trip 3 -->
+            <div class="trip-card" id="trip3">
+
+                <h2>Kerala Escape</h2>
+
+                <div class="trip-info">
+                    📅 <span>10 Oct - 15 Oct</span>
+                </div>
+
+                <div class="trip-info">
+                    📍 <span>4 Destinations</span>
+                </div>
+
+                <div class="status">
+                    Planned
+                </div>
+
+                <div class="actions">
+                    <button onclick="viewTrip('Kerala Escape')">
+                        View
+                    </button>
+
+                    <button onclick="editTrip('Kerala Escape')">
+                        Edit
+                    </button>
+
+                    <button class="delete-btn"
+                            onclick="deleteTrip('trip3', 'Kerala Escape')">
+                        Delete
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Empty Trips Message -->
+        <div class="empty-message" id="emptyMessage">
+            <h2>No trips available 🌍</h2>
+            <p>Create your first trip to see it here.</p>
+        </div>
+
+    </main>
+
+
+    <footer>
+        GlobeTrotter © 2026
+    </footer>
+
+
+    <script>
+
+        function viewTrip(tripName) {
+            alert("Viewing: " + tripName);
+        }
+
+
+        function editTrip(tripName) {
+            alert("Edit trip: " + tripName);
+        }
+
+
+        function deleteTrip(tripId, tripName) {
+
+            let confirmation = confirm(
+                "Are you sure you want to delete " + tripName + "?"
+            );
+
+            if (confirmation) {
+
+                document.getElementById(tripId).remove();
+
+                checkEmptyTrips();
+
+                alert(tripName + " has been deleted.");
+            }
+        }
+
+
+        function checkEmptyTrips() {
+
+            let trips = document.querySelectorAll(".trip-card");
+
+            if (trips.length === 0) {
+                document.getElementById("emptyMessage").style.display = "block";
+            }
+        }
+
+
+        function createNewTrip() {
+
+            /*
+             * Your teammate is creating create-trip.html.
+             * Once that file is ready, this can simply be:
+             *
+             * window.location.href = "create-trip.html";
+             */
+
+            window.location.href = "create-trip.html";
+        }
+
+
+        function openProfile() {
+            alert("Profile page will be connected later.");
+        }
+
+    </script>
+
+</body>
+</html>
