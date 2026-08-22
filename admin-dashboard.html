@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GlobeTrotter - Admin Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            color: #222;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .dashboard-btn {
+            background: #222;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .dashboard-btn:hover {
+            background: #444;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            background: white;
+            padding: 28px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .heading h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .heading p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Statistics */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card h3 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #777;
+        }
+
+        /* Grid sections */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            font-size: 21px;
+        }
+
+        /* Bar chart */
+        .bar {
+            margin-bottom: 17px;
+        }
+
+        .bar-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .bar-bg {
+            width: 100%;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: #222;
+            border-radius: 10px;
+        }
+
+        /* Engagement */
+        .engagement {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .engagement-box {
+            border: 1px solid #ddd;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .engagement-box strong {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .engagement-box span {
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* Table */
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* User management */
+        .user-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-info strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .user-info span {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .manage-btn {
+            border: 1px solid #ccc;
+            background: white;
+            padding: 8px 13px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .manage-btn:hover {
+            background: #f1f1f1;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        @media (max-width: 900px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .engagement {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 18px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">🌍 GlobeTrotter</div>
+
+        <button class="dashboard-btn"
+                onclick="window.location.href='dashboard.html'">
+            ← Dashboard
+        </button>
+    </nav>
+
+
+    <main class="container">
+
+        <!-- Heading -->
+        <section class="heading">
+            <h1>📊 Admin / Analytics Dashboard</h1>
+            <p>
+                Monitor user trends, trip data and platform usage.
+            </p>
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <h3>1,248</h3>
+                <p>Total Users</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✈️</div>
+                <h3>3,642</h3>
+                <p>Trips Created</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <h3>86</h3>
+                <p>Popular Cities</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <h3>78%</h3>
+                <p>User Engagement</p>
+            </div>
+
+        </section>
+
+
+        <!-- Analytics -->
+        <section class="grid">
+
+            <!-- Popular Cities -->
+            <div class="card">
+
+                <h2>🌍 Top Cities</h2>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Paris</span>
+                        <strong>82%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:82%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Dubai</span>
+                        <strong>70%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:70%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Bali</span>
+                        <strong>64%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:64%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>London</span>
+                        <strong>55%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:55%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Goa</span>
+                        <strong>48%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:48%;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Popular Activities -->
+            <div class="card">
+
+                <h2>🏃 Popular Activities</h2>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Beach Visit</span>
+                        <strong>76%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:76%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Sightseeing</span>
+                        <strong>69%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:69%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Food & Restaurants</span>
+                        <strong>61%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:61%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Adventure</span>
+                        <strong>53%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:53%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar">
+                    <div class="bar-info">
+                        <span>Shopping</span>
+                        <strong>45%</strong>
+                    </div>
+
+                    <div class="bar-bg">
+                        <div class="bar-fill" style="width:45%;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- User Engagement -->
+        <section class="card" style="margin-bottom:25px;">
+
+            <h2>📈 User Engagement Statistics</h2>
+
+            <div class="engagement">
+
+                <div class="engagement-box">
+                    <strong>892</strong>
+                    <span>Active Users</span>
+                </div>
+
+                <div class="engagement-box">
+                    <strong>624</strong>
+                    <span>Trips This Month</span>
+                </div>
+
+                <div class="engagement-box">
+                    <strong>73%</strong>
+                    <span>Returning Users</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Recent Trips -->
+        <section class="table-card">
+
+            <h2>✈️ Recent Trips Created</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Trip</th>
+                        <th>Destination</th>
+                        <th>Days</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Diya</td>
+                        <td>Goa Adventure</td>
+                        <td>Goa</td>
+                        <td>3</td>
+                        <td>
+                            <span class="status">Active</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Riya</td>
+                        <td>Europe Trip</td>
+                        <td>Paris</td>
+                        <td>7</td>
+                        <td>
+                            <span class="status">Active</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Krishna</td>
+                        <td>Dubai Escape</td>
+                        <td>Dubai</td>
+                        <td>5</td>
+                        <td>
+                            <span class="status">Active</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Aarav</td>
+                        <td>Bali Holiday</td>
+                        <td>Bali</td>
+                        <td>6</td>
+                        <td>
+                            <span class="status">Active</span>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <!-- User Management -->
+        <section class="card">
+
+            <h2>👤 User Management</h2>
+
+            <div class="user-row">
+
+                <div class="user-info">
+                    <strong>Siya Mehta</strong>
+                    <span>Active user • 12 trips</span>
+                </div>
+
+                <button class="manage-btn"
+                        onclick="alert('User details opened')">
+                    Manage
+                </button>
+
+            </div>
+
+
+            <div class="user-row">
+
+                <div class="user-info">
+                    <strong>Ishita Sharma</strong>
+                    <span>Active user • 8 trips</span>
+                </div>
+
+                <button class="manage-btn"
+                        onclick="alert('User details opened')">
+                    Manage
+                </button>
+
+            </div>
+
+
+            <div class="user-row">
+
+                <div class="user-info">
+                    <strong>Neil Kapoor</strong>
+                    <span>Active user • 15 trips</span>
+                </div>
+
+                <button class="manage-btn"
+                        onclick="alert('User details opened')">
+                    Manage
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        GlobeTrotter © 2026
+    </footer>
+
+
+    <script>
+        console.log("Admin Analytics Dashboard loaded successfully.");
+    </script>
+
+</body>
+</html>
