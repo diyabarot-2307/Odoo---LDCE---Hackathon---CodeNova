@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+        content=""width=device-width,initial-scale=1.0h>
+        <title> Create Trip </title>
+        <style>
+            body {
+                font-family: Arial,sans-serif; background-color: #f2f6ff;
+                display: flex; justify-content: center; align-items: center;
+                min-hight: 100vh; margin: 0; 
+            }
+            .container {
+                background-color: white; width: 400px; padding: 30px;
+                border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15)
+            }
+            h1 { 
+                text-align: center; margin-bottom: 25px;
+            }
+            label {
+                display: block; margin-top: 15px;
+                margin-bottom: 6px; font-weight: bold;
+            }
+            input {
+                width: 100%; padding: 10px; box-sizing: border-box;
+                border: 1px solid #ccc; border-radius: 6px; font-size: 15px;
+            }
+            button {
+                width: 100%; padding: 12px; margin-top: 20px;
+                border: none; border-radius: 6px; font-size: 16px; 
+                cursor: pointer;
+            }
+            .destination-btn {
+                background-color: #e8f0ff; color: #2457b8;
+            }
+            #destinations {
+                margin-top: 10px;
+            }
+            .destination {
+                display: flex; gap: 8px; margin-top: 8px;
+            }
+            .destination input {
+                flex: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1> Create Your Trip</h1>
+            <form id="tripForm">
+                <label>Trip Name</label> <input id="tripName" required placeholder="Enter trip name">
+                <label>Start Date</label> <input id="startDate" type="date" required>
+                <label>End Date</label> <input id="endDate" type="date" required>
+                <label>Budget</label> <input id="budget" type="number" min="0" required placeholder="Enter Budget">
+                <div id="destinations"> <label> Destinations</label> <div class="destination">
+                     <input name="destination" required placeholder="Enter Destination"> </div></div>
+                     <button type="button" class="destination-btn" onclick="addDestination()">+Add Destination</button>
+                     <button class="create-btn"> CREATE TRIP </button>
+                     </form>
+                     </div>
+
+                     <script>
+                        function addDestination(){
+                            let d=document.createElement("div");
+                            d.className="destination";
+                            d.innerHTML='<input name="destination" required placeholder="Enter destination">';
+                            document.getElementById("destinations").appendChild(d);
+                        }
+                        tripForm.onsubmit=e=>{
+                            e.preventDefault();
+                            let dest=[...document.querySelectorAll('[name="destination"]')].map(i=>i.value);
+                            alert(Trip Created! \nTrip: ${tripName.value}\nStart: ${startDate.value}\nEnd: ${endDate.value}\nBudget: ${budget.value}\nDestination: ${dest.join(",")});
+                        }
+                     </script>
+     </body>
+</html>
