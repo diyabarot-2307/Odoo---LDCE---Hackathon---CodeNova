@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GlobeTrotter - Trip Calendar</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            color: #222;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            background: #222;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: #444;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Trip selector */
+        .trip-selector {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 11px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .add-btn {
+            background: #222;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Timeline */
+        .timeline {
+            margin-top: 25px;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .day-title {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .date {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Activity */
+        .activities {
+            min-height: 40px;
+        }
+
+        .activity {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #e4e4e4;
+            border-radius: 12px;
+            background: #fafafa;
+            cursor: grab;
+        }
+
+        .activity:active {
+            cursor: grabbing;
+        }
+
+        .drag {
+            font-size: 20px;
+            color: #999;
+        }
+
+        .time {
+            min-width: 85px;
+            font-weight: bold;
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-info h3 {
+            margin-bottom: 5px;
+            font-size: 17px;
+        }
+
+        .activity-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            border: 1px solid #ddd;
+            background: white;
+            padding: 7px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .edit-btn:hover {
+            background: #eee;
+        }
+
+        .delete-btn:hover {
+            background: #ffe5e5;
+        }
+
+        /* Add activity */
+        .add-activity {
+            margin-top: 12px;
+            border: 1px dashed #bbb;
+            padding: 12px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .add-activity:hover {
+            background: #f5f5f5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .save-btn {
+            background: #222;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .cancel-btn {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .activity {
+                flex-wrap: wrap;
+            }
+
+            .time {
+                min-width: 65px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">🌍 GlobeTrotter</div>
+
+        <button class="back-btn" onclick="goToDashboard()">
+            ← Dashboard
+        </button>
+    </nav>
+
+
+    <main class="container">
+
+        <!-- Header -->
+        <section class="page-header">
+
+            <h1>📅 Trip Calendar / Timeline</h1>
+
+            <p>
+                Visualize your journey and organize your daily activities.
+            </p>
+
+            <div class="trip-selector">
+
+                <label for="tripSelect">
+                    <strong>Select Trip:</strong>
+                </label>
+
+                <select id="tripSelect">
+                    <option>Goa Adventure</option>
+                    <option>Rajasthan Explorer</option>
+                    <option>Kerala Escape</option>
+                </select>
+
+                <button class="add-btn" onclick="addNewDay()">
+                    + Add Day
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- Timeline -->
+        <section class="timeline" id="timeline">
+
+            <!-- Day 1 -->
+            <div class="day-card">
+
+                <div class="day-header">
+
+                    <div>
+                        <div class="day-title">Day 1</div>
+                        <div class="date">12 August 2026</div>
+                    </div>
+
+                    <strong>📍 Goa</strong>
+
+                </div>
+
+                <div class="activities">
+
+                    <div class="activity" draggable="true">
+
+                        <div class="drag">☰</div>
+
+                        <div class="time">
+                            09:00 AM
+                        </div>
+
+                        <div class="activity-info">
+                            <h3>🏨 Hotel Check-in</h3>
+                            <p>Check-in and settle into the hotel.</p>
+                        </div>
+
+                        <button class="edit-btn"
+                            onclick="editActivity(this)">
+                            ✏️ Edit
+                        </button>
+
+                        <button class="delete-btn"
+                            onclick="deleteActivity(this)">
+                            🗑️
+                        </button>
+
+                    </div>
+
+
+                    <div class="activity" draggable="true">
+
+                        <div class="drag">☰</div>
+
+                        <div class="time">
+                            12:30 PM
+                        </div>
+
+                        <div class="activity-info">
+                            <h3>🍴 Lunch</h3>
+                            <p>Lunch at a local restaurant.</p>
+                        </div>
+
+                        <button class="edit-btn"
+                            onclick="editActivity(this)">
+                            ✏️ Edit
+                        </button>
+
+                        <button class="delete-btn"
+                            onclick="deleteActivity(this)">
+                            🗑️
+                        </button>
+
+                    </div>
+
+
+                    <div class="activity" draggable="true">
+
+                        <div class="drag">☰</div>
+
+                        <div class="time">
+                            04:00 PM
+                        </div>
+
+                        <div class="activity-info">
+                            <h3>🏖️ Beach Visit</h3>
+                            <p>Relax and explore the beach.</p>
+                        </div>
+
+                        <button class="edit-btn"
+                            onclick="editActivity(this)">
+                            ✏️ Edit
+                        </button>
+
+                        <button class="delete-btn"
+                            onclick="deleteActivity(this)">
+                            🗑️
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="add-activity"
+                    onclick="openAddActivity(this)">
+                    + Add Activity
+                </div>
+
+            </div>
+
+
+            <!-- Day 2 -->
+            <div class="day-card">
+
+                <div class="day-header">
+
+                    <div>
+                        <div class="day-title">Day 2</div>
+                        <div class="date">13 August 2026</div>
+                    </div>
+
+                    <strong>📍 North Goa</strong>
+
+                </div>
+
+                <div class="activities">
+
+                    <div class="activity" draggable="true">
+
+                        <div class="drag">☰</div>
+
+                        <div class="time">
+                            10:00 AM
+                        </div>
+
+                        <div class="activity-info">
+                            <h3>🏛️ Fort Aguada</h3>
+                            <p>Explore the historic fort.</p>
+                        </div>
+
+                        <button class="edit-btn"
+                            onclick="editActivity(this)">
+                            ✏️ Edit
+                        </button>
+
+                        <button class="delete-btn"
+                            onclick="deleteActivity(this)">
+                            🗑️
+                        </button>
+
+                    </div>
+
+
+                    <div class="activity" draggable="true">
+
+                        <div class="drag">☰</div>
+
+                        <div class="time">
+                            02:00 PM
+                        </div>
+
+                        <div class="activity-info">
+                            <h3>🌴 Calangute Beach</h3>
+                            <p>Enjoy the afternoon at the beach.</p>
+                        </div>
+
+                        <button class="edit-btn"
+                            onclick="editActivity(this)">
+                            ✏️ Edit
+                        </button>
+
+                        <button class="delete-btn"
+                            onclick="deleteActivity(this)">
+                            🗑️
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="add-activity"
+                    onclick="openAddActivity(this)">
+                    + Add Activity
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        GlobeTrotter © 2026
+    </footer>
+
+
+    <!-- Edit/Add Modal -->
+    <div class="modal" id="activityModal">
+
+        <div class="modal-content">
+
+            <h2 id="modalTitle">Add Activity</h2>
+
+            <div class="form-group">
+
+                <label>Activity Name</label>
+
+                <input
+                    type="text"
+                    id="activityName"
+                    placeholder="e.g. Visit Museum">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Time</label>
+
+                <input
+                    type="text"
+                    id="activityTime"
+                    placeholder="e.g. 10:00 AM">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <textarea
+                    id="activityDescription"
+                    rows="3"
+                    placeholder="Enter activity details">
+                </textarea>
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    class="cancel-btn"
+                    onclick="closeModal()">
+                    Cancel
+                </button>
+
+                <button
+                    class="save-btn"
+                    onclick="saveActivity()">
+                    Save Activity
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let currentActivity = null;
+        let currentContainer = null;
+
+
+        /* Dashboard button */
+        function goToDashboard() {
+            window.location.href = "dashboard.html";
+        }
+
+
+        /* Delete activity */
+        function deleteActivity(button) {
+
+            const activity = button.closest(".activity");
+
+            if (confirm("Delete this activity?")) {
+                activity.remove();
+            }
+
+        }
+
+
+        /* Edit activity */
+        function editActivity(button) {
+
+            currentActivity = button.closest(".activity");
+
+            const name =
+                currentActivity.querySelector("h3").innerText
+                .replace(/^.{1,2}\s/, "");
+
+            const time =
+                currentActivity.querySelector(".time").innerText;
+
+            const description =
+                currentActivity.querySelector(".activity-info p").innerText;
+
+            document.getElementById("modalTitle").innerText =
+                "Edit Activity";
+
+            document.getElementById("activityName").value =
+                name;
+
+            document.getElementById("activityTime").value =
+                time;
+
+            document.getElementById("activityDescription").value =
+                description;
+
+            document.getElementById("activityModal").style.display =
+                "flex";
+        }
+
+
+        /* Add activity */
+        function openAddActivity(button) {
+
+            currentActivity = null;
+
+            currentContainer =
+                button.parentElement.querySelector(".activities");
+
+            document.getElementById("modalTitle").innerText =
+                "Add Activity";
+
+            document.getElementById("activityName").value = "";
+            document.getElementById("activityTime").value = "";
+            document.getElementById("activityDescription").value = "";
+
+            document.getElementById("activityModal").style.display =
+                "flex";
+        }
+
+
+        /* Save activity */
+        function saveActivity() {
+
+            const name =
+                document.getElementById("activityName").value;
+
+            const time =
+                document.getElementById("activityTime").value;
+
+            const description =
+                document.getElementById("activityDescription").value;
+
+            if (!name || !time) {
+                alert("Please enter activity name and time.");
+                return;
+            }
+
+
+            if (currentActivity) {
+
+                currentActivity.querySelector("h3").innerText =
+                    "📌 " + name;
+
+                currentActivity.querySelector(".time").innerText =
+                    time;
+
+                currentActivity.querySelector(".activity-info p").innerText =
+                    description;
+
+            } else {
+
+                const activity =
+                    document.createElement("div");
+
+                activity.className = "activity";
+
+                activity.draggable = true;
+
+                activity.innerHTML = `
+                    <div class="drag">☰</div>
+
+                    <div class="time">
+                        ${time}
+                    </div>
+
+                    <div class="activity-info">
+                        <h3>📌 ${name}</h3>
+                        <p>${description}</p>
+                    </div>
+
+                    <button class="edit-btn"
+                        onclick="editActivity(this)">
+                        ✏️ Edit
+                    </button>
+
+                    <button class="delete-btn"
+                        onclick="deleteActivity(this)">
+                        🗑️
+                    </button>
+                `;
+
+                currentContainer.appendChild(activity);
+
+                enableDrag(activity);
+            }
+
+            closeModal();
+        }
+
+
+        /* Close modal */
+        function closeModal() {
+
+            document.getElementById("activityModal").style.display =
+                "none";
+
+        }
+
+
+        /* Add new day */
+        function addNewDay() {
+
+            const timeline =
+                document.getElementById("timeline");
+
+            const dayNumber =
+                timeline.querySelectorAll(".day-card").length + 1;
+
+            const day =
+                document.createElement("div");
+
+            day.className = "day-card";
+
+            day.innerHTML = `
+                <div class="day-header">
+
+                    <div>
+                        <div class="day-title">
+                            Day ${dayNumber}
+                        </div>
+
+                        <div class="date">
+                            New Day
+                        </div>
+                    </div>
+
+                    <strong>📍 New Destination</strong>
+
+                </div>
+
+                <div class="activities"></div>
+
+                <div class="add-activity"
+                    onclick="openAddActivity(this)">
+                    + Add Activity
+                </div>
+            `;
+
+            timeline.appendChild(day);
+        }
+
+
+        /* Drag and drop */
+        function enableDrag(activity) {
+
+            activity.addEventListener("dragstart", function () {
+                activity.classList.add("dragging");
+            });
+
+            activity.addEventListener("dragend", function () {
+                activity.classList.remove("dragging");
+            });
+        }
+
+
+        document.querySelectorAll(".activity").forEach(enableDrag);
+
+
+        document.querySelectorAll(".activities").forEach(container => {
+
+            container.addEventListener("dragover", function (event) {
+
+                event.preventDefault();
+
+                const dragging =
+                    document.querySelector(".dragging");
+
+                if (!dragging) return;
+
+                const afterElement =
+                    getDragAfterElement(container, event.clientY);
+
+                if (afterElement == null) {
+                    container.appendChild(dragging);
+                } else {
+                    container.insertBefore(
+                        dragging,
+                        afterElement
+                    );
+                }
+
+            });
+
+        });
+
+
+        function getDragAfterElement(container, y) {
+
+            const elements =
+                [...container.querySelectorAll(".activity:not(.dragging)")];
+
+            return elements.reduce((closest, child) => {
+
+                const box =
+                    child.getBoundingClientRect();
+
+                const offset =
+                    y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+
+                    return {
+                        offset: offset,
+                        element: child
+                    };
+
+                } else {
+
+                    return closest;
+
+                }
+
+            }, {
+                offset: Number.NEGATIVE_INFINITY
+            }).element;
+        }
+
+    </script>
+
+</body>
+</html>
